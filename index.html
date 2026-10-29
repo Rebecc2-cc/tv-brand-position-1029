@@ -87,7 +87,7 @@ footer{color:var(--sub);font-size:12px;text-align:center;padding:10px 0 30px;}
 <div class="meta">
 <span>口径：<b>26W01-W43 年累计</b></span>
 <span>市场总盘：<b>8,902,195 台 / 309.8亿</span>
-<span>更新时间：<b>2026-10-29 16:02</b></span>
+<span>更新时间：<b>2026-10-29 16:10</b></span>
 </div>
 </header>
 
@@ -197,6 +197,7 @@ footer{color:var(--sub);font-size:12px;text-align:center;padding:10px 0 30px;}
 <h3>6.2 抗反射结构（55吋及以上）</h3>
 <div class="figscroll"><svg id="figAnti"></svg></div>
 <h3>6.3 音响声道结构（55吋及以上，按声道规格细分）</h3>
+<div class="sub" style="margin:-4px 0 8px">声道规格未标注的机型（参数库仅记录音响联名或功率，如帝瓦雷、安桥、B&amp;O、50W 扬声器）计入 2.0。</div>
 <div class="figscroll"><svg id="figAudio"></svg></div>
 
 <div class="insight"><h4>解读</h4>
@@ -603,15 +604,15 @@ function attachTip(svg, W, H){
 /* ---- 5.1 技术结构 ---- */
 (function(){
   const merge = t => { t = String(t||"").trim(); const tu = t.toUpperCase().replace(/ /g,"");
-    if(tu==="LED"||tu==="LCD"||t==="LED(直下式)"||t==="普通液晶") return "普通LED/LCD";
+    if(tu==="LED"||tu==="LCD"||t==="LED(直下式)"||t==="普通液晶"||tu==="QLED") return "普通LED/LCD";
     if(tu==="MINILED"||tu==="MINILED.") return "Mini LED";
     if(tu==="QD-MINILED") return "QD-Mini";
     if(tu==="SQD-MINILED") return "SQD-Mini";
     if(tu==="RGB-MINILED") return "RGB-Mini";
     if(tu==="BGB-MINILED") return "BGB-Mini";
     if(tu==="OLED") return "OLED"; return "其他"; };
-  const cats = ["普通LED/LCD","Mini LED","QD-Mini","SQD-Mini","RGB-Mini","BGB-Mini","OLED","其他"];
-  const cols = ["#b0bec5","#42a5f5","#7e57c2","#5c6bc0","#ef5350","#ff8a65","#333","#d9dde2"];
+  const cats = ["普通LED/LCD","Mini LED","QD-Mini","SQD-Mini","RGB-Mini","BGB-Mini","OLED"];
+  const cols = ["#b0bec5","#42a5f5","#7e57c2","#5c6bc0","#ef5350","#ff8a65","#333"];
   const agg = {};
   B8.forEach(b => { agg[b] = {}; let tot = 0; for(const t in s55[b].tech){ const m = merge(t); agg[b][m] = (agg[b][m]||0)+s55[b].tech[t]; tot += s55[b].tech[t]; } agg[b]._t = tot; });
   stack100("figTech", cats, cols, (rl, c) => (agg[rl][c]||0)/agg[rl]._t, B8);
@@ -706,10 +707,13 @@ function attachTip(svg, W, H){
     return (t[c]||0)/tot;
   }, B8);
 
-  const cCats = ["2.0","2.1","2.1.2","2.2","2.2.2","4.1.2","7.1.2及以上","其他"];
-  const cCols = ["#cfd8dc","#90caf9","#1565c0","#26c6da","#00838f","#7e57c2","#4527a0","#eceff1"];
-  stack100("figAudio", cCats, cCols,
-    (rl,c) => (s55[rl].audio[c]||0)/Object.values(s55[rl].audio).reduce((x,y)=>x+y,0), B8);
+  const cCats = ["2.0","2.1","2.1.2","2.2","2.2.2","4.1.2","7.1.2及以上"];
+  const cCols = ["#cfd8dc","#90caf9","#1565c0","#26c6da","#00838f","#7e57c2","#4527a0"];
+  stack100("figAudio", cCats, cCols, (rl,c) => {
+    const t = s55[rl].audio, tot = Object.values(t).reduce((x,y)=>x+y,0);
+    if(c === "2.0") return ((t["2.0"]||0) + (t["其他"]||0)) / tot;   // 声道未标注机型计入 2.0
+    return (t[c]||0)/tot;
+  }, B8);
 })();
 
 /* ---- 7 渠道 ---- */
