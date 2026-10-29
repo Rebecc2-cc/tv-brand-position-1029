@@ -87,7 +87,7 @@ footer{color:var(--sub);font-size:12px;text-align:center;padding:10px 0 30px;}
 <div class="meta">
 <span>口径：<b>26W01-W43 年累计</b></span>
 <span>市场总盘：<b>8,902,195 台 / 309.8亿</span>
-<span>更新时间：<b>2026-10-29 15:39</b></span>
+<span>更新时间：<b>2026-10-29 15:53</b></span>
 </div>
 </header>
 
@@ -165,11 +165,11 @@ footer{color:var(--sub);font-size:12px;text-align:center;padding:10px 0 30px;}
 
 <section id="s5">
 <h2><span class="no">05</span>技术路线深度分析</h2>
-<div class="sub">技术/分区/刷新率/Mini渗透均基于 8 品牌参数库（master_v3），销量加权。</div>
-<h3>5.1 显示技术结构（销量占比）</h3>
+<div class="sub">技术/分区/刷新率/Mini渗透均基于 8 品牌参数库（master_v3），55 吋及以上、销量加权。</div>
+<h3>5.1 显示技术结构（销量占比，55吋及以上）</h3>
 <div class="figscroll"><svg id="figTech"></svg></div>
 <h3>5.2 Mini 类渗透率 / 平均分区 / 平均刷新率（55吋及以上）</h3>
-<div class="sub">本章 5.1 为全尺寸口径；5.2、5.3 及以下内存结构均为 <b>55 吋及以上</b> 口径（销量加权），以剔除小尺寸低配机型对均值的影响。</div>
+<div class="sub">本章 5.1–5.3 及内存结构全部为 <b>55 吋及以上</b> 口径（销量加权），以剔除小尺寸低配机型对结构的影响。</div>
 <div class="figscroll"><svg id="figMini"></svg></div>
 <div class="sub" style="margin-top:14px">5.2 补充：运行内存结构（55吋及以上，按运行内存与存储空间分开统计）</div>
 <div class="figscroll"><svg id="figMemGe55"></svg></div>
@@ -181,7 +181,7 @@ footer{color:var(--sub);font-size:12px;text-align:center;padding:10px 0 30px;}
 <div class="insight"><h4>解读</h4>
 <ul>
 <li><b>Mini LED 已从"高端卖点"变为"3000+ 入场券"</b>：3000-4999 元带各品牌 Mini 类渗透——小米 100%、创维 73%、TCL 63%、雷鸟 57%、Vidda 56%——不跟进 Mini 的品牌正在失去 3000+ 市场的报价资格。</li>
-<li><b>两大独家技术路线分化</b>：海信独家 <b>RGB-Mini LED</b>（占其自身 11%，E8 系担纲），TCL 独家 <b>SQD-Mini LED</b>（占其自身 17.4%，Q10M 系 24 款规模商用）——中国面板双雄在 Mini LED 的光谱路线上正面分流，是 2026 年最值得关注的技术叙事对决。小米 BGB-Mini（双子像素）已小规模上量。</li>
+<li><b>两大独家技术路线分化</b>：海信独家 <b>RGB-Mini LED</b>（占其自身 11.4%，E8 系担纲），TCL 独家 <b>SQD-Mini LED</b>（占其自身 17.9%，Q10M 系 24 款规模商用）——中国面板双雄在 Mini LED 的光谱路线上正面分流，是 2026 年最值得关注的技术叙事对决。小米 BGB-Mini（双子像素）已小规模上量。</li>
 <li><b>2000-2999 元带的降维打击来自小米</b>：该带小米平均 <b>486 分区 / 144Hz / 95% Mini</b>，而对手普遍在 100-270 分区、60-92Hz——小米用下一代配置打上一代价格。TCL 在该带以 136Hz 高刷反击（全场唯一在低价带做高刷的规模玩家）。</li>
 <li><b>5000-6999 元带两种产品哲学正面相撞</b>：创维堆 <b>1439 分区</b>（全场最高）但刷新仅 117Hz；海信 1102 分区 + 156Hz 均衡；小米 1532 分区 + 4GB+ 99%。分区是"参数党"可感知卖点，高刷是"体验党"可感知卖点——创维赌前者，海信/小米赌均衡。</li>
 <li><b>万元+ 市场雷鸟是隐藏的堆料王</b>：平均 3742 分区全场第一（98 吋鹤6 Ultra 系），但绝对量仅 0.3万 台，是 TCL（6.8万 台）的 1/20——堆料未转化为规模，高端渠道与品牌力是雷鸟的短板。</li>
@@ -289,7 +289,7 @@ footer{color:var(--sub);font-size:12px;text-align:center;padding:10px 0 30px;}
 </ol>
 </section>
 
-<footer>数据来源：AVC 奥维云网 · 线上零售监测周度数据库（26W01-W43）｜参数库：8品牌产品参数 master（tvlabs.cn 核验）｜本报告由数据脚本自动生成</footer>
+<footer>数据来源：AVC 奥维云网 · 线上零售监测周度数据库（26W01-W43）｜参数库：8品牌产品参数 master</footer>
 </div>
 
 <script>
@@ -602,17 +602,17 @@ function attachTip(svg, W, H){
 /* ---- 5.1 技术结构 ---- */
 (function(){
   const merge = t => { t = String(t||"").trim(); const tu = t.toUpperCase().replace(/ /g,"");
-    if(tu==="LED"||tu==="LCD"||t==="LED(直下式)") return "普通LED/LCD";
+    if(tu==="LED"||tu==="LCD"||t==="LED(直下式)"||t==="普通液晶") return "普通LED/LCD";
     if(tu==="MINILED"||tu==="MINILED.") return "Mini LED";
-    if(t==="QD-Mini LED") return "QD-Mini";
-    if(t==="SQD-Mini LED") return "SQD-Mini";
-    if(t==="RGB-Mini LED") return "RGB-Mini";
-    if(t==="BGB-Mini LED") return "BGB-Mini";
-    if(t==="OLED") return "OLED"; return "其他"; };
-  const cats = ["普通LED/LCD","Mini LED","QD-Mini","SQD-Mini","RGB-Mini","BGB-Mini","OLED"];
-  const cols = ["#b0bec5","#42a5f5","#7e57c2","#5c6bc0","#ef5350","#ff8a65","#333"];
+    if(tu==="QD-MINILED") return "QD-Mini";
+    if(tu==="SQD-MINILED") return "SQD-Mini";
+    if(tu==="RGB-MINILED") return "RGB-Mini";
+    if(tu==="BGB-MINILED") return "BGB-Mini";
+    if(tu==="OLED") return "OLED"; return "其他"; };
+  const cats = ["普通LED/LCD","Mini LED","QD-Mini","SQD-Mini","RGB-Mini","BGB-Mini","OLED","其他"];
+  const cols = ["#b0bec5","#42a5f5","#7e57c2","#5c6bc0","#ef5350","#ff8a65","#333","#d9dde2"];
   const agg = {};
-  B8.forEach(b => { agg[b] = {}; let tot = 0; for(const t in sp.tech[b]){ const m = merge(t); agg[b][m] = (agg[b][m]||0)+sp.tech[b][t]; tot += sp.tech[b][t]; } agg[b]._t = tot; });
+  B8.forEach(b => { agg[b] = {}; let tot = 0; for(const t in s55[b].tech){ const m = merge(t); agg[b][m] = (agg[b][m]||0)+s55[b].tech[t]; tot += s55[b].tech[t]; } agg[b]._t = tot; });
   stack100("figTech", cats, cols, (rl, c) => (agg[rl][c]||0)/agg[rl]._t, B8);
 })();
 
