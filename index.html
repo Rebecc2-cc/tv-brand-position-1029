@@ -87,7 +87,7 @@ footer{color:var(--sub);font-size:12px;text-align:center;padding:10px 0 30px;}
 <div class="meta">
 <span>口径：<b>26W01-W43 年累计</b></span>
 <span>市场总盘：<b>8,902,195 台 / 309.8亿</span>
-<span>更新时间：<b>2026-10-29 16:10</b></span>
+<span>更新时间：<b>2026-10-29 16:17</b></span>
 </div>
 </header>
 
@@ -171,9 +171,7 @@ footer{color:var(--sub);font-size:12px;text-align:center;padding:10px 0 30px;}
 <h3>5.2 Mini 类渗透率 / 平均分区 / 平均刷新率（55吋及以上）</h3>
 <div class="sub">本章 5.1–5.3 及内存结构全部为 <b>55 吋及以上</b> 口径（销量加权），以剔除小尺寸低配机型对结构的影响。</div>
 <div class="figscroll"><svg id="figMini"></svg></div>
-<div class="sub" style="margin-top:14px">5.2 补充：运行内存结构（55吋及以上，按运行内存与存储空间分开统计）</div>
-<div class="figscroll"><svg id="figMemGe55"></svg></div>
-<div class="sub" style="margin-top:10px">存储空间结构（55吋及以上）</div>
+<div class="sub" style="margin-top:14px">5.2 补充：存储空间结构（55吋及以上，运行内存结构见 6.1）</div>
 <div class="figscroll"><svg id="figRomGe55"></svg></div>
 <h3>5.3 同价格带配置对比矩阵（55吋及以上：平均分区 / 平均刷新 / 4GB+内存 / Mini 类占比）</h3>
 <div class="figscroll" id="cfgWrap"></div>
@@ -643,11 +641,8 @@ function attachTip(svg, W, H){
   });
 })();
 
-/* ---- 5.2 补充：运行内存 / 存储空间（55吋及以上） ---- */
+/* ---- 5.2 补充：存储空间（55吋及以上） ---- */
 (function(){
-  const rc = ["≤2GB","3GB","4GB","6GB","8GB+"], rcol = ["#c5dfe8","#7fbcd9","#2b7a9e","#17607e","#0d3a4d"];
-  stack100("figMemGe55", rc, rcol,
-    (rl,c) => (s55[rl].mem_run[c]||0)/Object.values(s55[rl].mem_run).reduce((x,y)=>x+y,0), B8);
   const sC = ["≤32GB","64GB","128GB+"], sCol = ["#c5dfe8","#5aa0c0","#17607e"];
   stack100("figRomGe55", sC, sCol,
     (rl,c) => (s55[rl].mem_rom[c]||0)/Object.values(s55[rl].mem_rom).reduce((x,y)=>x+y,0), B8);
