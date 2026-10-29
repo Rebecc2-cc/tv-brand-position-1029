@@ -8,7 +8,7 @@
 :root{--bg:#f5f6f8;--card:#fff;--ink:#1f2328;--sub:#57606a;--line:#e4e7eb;--up:#c62828;--dn:#1565c0;}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);padding:18px;line-height:1.6;}
-.wrap{max-width:1180px;margin:0 auto;}
+.wrap{max-width:1400px;margin:0 auto;}
 header.hero{background:linear-gradient(135deg,#0d1b2a,#1b3a5c);color:#fff;border-radius:14px;padding:28px 30px;margin-bottom:18px;}
 header.hero h1{font-size:24px;margin-bottom:8px;}
 header.hero .meta{font-size:12.5px;opacity:.85;display:flex;flex-wrap:wrap;gap:14px;}
@@ -59,7 +59,24 @@ table.mini td.r{text-align:right;font-variant-numeric:tabular-nums;}
 .cfgtbl td.b{background:#eef1f4;vertical-align:middle;}
 .cfgnote{font-size:12px;color:var(--sub);background:#fafbfc;border:1px solid var(--line);border-radius:6px;padding:7px 11px;margin-bottom:8px;}
 footer{color:var(--sub);font-size:12px;text-align:center;padding:10px 0 30px;}
-@media(max-width:640px){section{padding:16px 14px;}header.hero{padding:20px 18px;}h2{font-size:16px;}}
+@media(max-width:900px){
+  body{padding:10px;}
+  header.hero{padding:20px 18px;border-radius:12px;}
+  header.hero h1{font-size:19px;}
+  header.hero .meta{font-size:11.5px;gap:8px;}
+  section{padding:16px 14px;border-radius:10px;margin-bottom:12px;}
+  h2{font-size:16px;} h3{font-size:14px;margin:14px 0 8px;}
+  .sub{font-size:12px;}
+  .insight{padding:12px 14px;} .insight li{font-size:13px;}
+  /* 图表改为横向滑动，保持可读字号，不做整体压缩 */
+  .figscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px;}
+  .figscroll svg{min-width:900px;}
+  .figscroll .cfgtbl{min-width:900px;}
+  .pgrid{grid-template-columns:1fr;}
+  .pcard .kpis{grid-template-columns:1fr 1fr;}
+  table.mini{font-size:11px;}
+  table.mini th,table.mini td{padding:4px 5px;}
+}
 </style>
 </head>
 <body>
@@ -70,7 +87,7 @@ footer{color:var(--sub);font-size:12px;text-align:center;padding:10px 0 30px;}
 <div class="meta">
 <span>口径：<b>26W01-W43 年累计</b></span>
 <span>市场总盘：<b>8,902,195 台 / 309.8亿</span>
-<span>更新时间：<b>2026-10-29 15:18</b></span>
+<span>更新时间：<b>2026-10-29 15:39</b></span>
 </div>
 </header>
 
@@ -287,17 +304,17 @@ const NS = "http://www.w3.org/2000/svg";
 function el(n, attrs, parent){ const e = document.createElementNS(NS, n); for(const k in (attrs||{})) e.setAttribute(k, attrs[k]); if(parent) parent.appendChild(e); return e; }
 function txt(e, s, x, y, attrs){ const t = el("text", Object.assign({x:x, y:y}, attrs||{}), e); t.textContent = s; return t; }
 function setup(id, w, h){ const svg = document.getElementById(id); svg.setAttribute("viewBox", `0 0 ${w} ${h}`); svg.setAttribute("width", w); svg.setAttribute("height", h); return svg; }
-const FS = 12, FC = "#57606a";
+const FS = 12, FC = "#57606a", CW = 1320;   // 全站图表统一宽度
 
 /* ---- 1.1 集团格局 ---- */
 (function(){
   const G = ["海信系","TCL系","创维系","小米系"], others_v = mkt.others_vol/DATA.meta.total_vol, others_a = mkt.others_amt/DATA.meta.total_amt;
   const rows = G.map(g => ({name:g, v:mkt.groups[g].share_v, a:mkt.groups[g].share_a, brands:mkt.groups[g].brands.join(" + ")}));
   rows.push({name:"其他46品牌", v:others_v, a:others_a, brands:"长虹/康佳/华为/海尔等"});
-  const W = 920, bw = 330, lw = 130, rh = 44, H = rows.length*rh + 58;
+  const W = CW, bw = 541, lw = 112, rh = 44, H = rows.length*rh + 58;
   const svg = setup("figGroup", W, H);
-  txt(svg, "◆ 销量份额", lw+30, 16, {"font-size":FS, fill:FC, "text-anchor":"middle", "font-weight":700});
-  txt(svg, "◆ 销额份额", lw+bw+120, 16, {"font-size":FS, fill:FC, "text-anchor":"middle", "font-weight":700});
+  txt(svg, "◆ 销量份额", lw+bw/2, 16, {"font-size":FS, fill:FC, "text-anchor":"middle", "font-weight":700});
+  txt(svg, "◆ 销额份额", lw+bw+70+bw/2, 16, {"font-size":FS, fill:FC, "text-anchor":"middle", "font-weight":700});
   const gcol = {"海信系":C["海信"], "TCL系":C["TCL"], "创维系":C["创维"], "小米系":C["小米"], "其他46品牌":"#9aa4b2"};
   rows.forEach((r, i) => {
     const y = 30 + i*rh, mid = y + rh/2 - 4;
@@ -307,15 +324,15 @@ const FS = 12, FC = "#57606a";
     const w1 = r.v/mv*bw, w2 = r.a/ma*bw;
     el("rect", {x:lw, y:y+8, width:w1, height:16, rx:3, fill:gcol[r.name], opacity:.95}, svg);
     txt(svg, fmtP(r.v), lw+w1+6, y+21, {"font-size":12, "font-weight":700, fill:"#1f2328"});
-    el("rect", {x:lw+bw+60, y:y+8, width:w2, height:16, rx:3, fill:gcol[r.name], opacity:.55}, svg);
-    txt(svg, fmtP(r.a), lw+bw+60+w2+6, y+21, {"font-size":12, "font-weight":700, fill:"#1f2328"});
+    el("rect", {x:lw+bw+70, y:y+8, width:w2, height:16, rx:3, fill:gcol[r.name], opacity:.55}, svg);
+    txt(svg, fmtP(r.a), lw+bw+70+w2+6, y+21, {"font-size":12, "font-weight":700, fill:"#1f2328"});
   });
 })();
 
 /* ---- 1.2 量额错位（参考1.1：双列水平条 + 右侧差值标签） ---- */
 (function(){
   const rows = B8.map(b => ({b, v:DATA.sv[b]*100, a:DATA.sa[b]*100, gap:DATA.gap[b]})).sort((x,y)=>y.gap-x.gap);
-  const W = 940, lw = 92, bw = 285, gapX = 26, rlab = 24, rh = 40, H = rows.length*rh + 58;
+  const W = CW, lw = 112, bw = 542, gapX = 26, rlab = 24, rh = 40, H = rows.length*rh + 58;
   const svg = setup("figGap", W, H);
   const mv = Math.max(...rows.map(r=>r.v)), ma = Math.max(...rows.map(r=>r.a));
   const x1 = lw + bw;                 // 第一列（销量份额）起点
@@ -340,7 +357,7 @@ const FS = 12, FC = "#57606a";
 
 /* ---- 2 定位地图 ---- */
 (function(){
-  const W = 940, H = 520, L = 78, R = 36, T = 52, Bm = 58;
+  const W = CW, H = 560, L = 112, R = 12, T = 56, Bm = 60;
   const svg = setup("figMap", W, H);
   const xs = B8.map(b=>DATA.avgp[b]), ys = B8.map(b=>DATA.sv[b]*100), as = B8.map(b=>DATA.sa[b]);
   const x0 = Math.floor(Math.min(...xs)*0.9/500)*500, x1 = Math.ceil(Math.max(...xs)*1.06/500)*500;
@@ -382,7 +399,7 @@ const FS = 12, FC = "#57606a";
 /* ---- 通用100%堆积条（支持悬停提示、图例自动换行、柱宽一致） ---- */
 function stack100(id, cats, catColors, getShare, rowLabels, opt){
   opt = opt || {};
-  const W = 940, lw = 112, rh = Math.max(30, Math.min(40, 540/(rowLabels.length+2))),
+  const W = CW, lw = 112, rh = Math.max(30, Math.min(40, 540/(rowLabels.length+2))),
         barH = rh-12, rowTotal = rowLabels.reduce((a,rl)=>a+cats.reduce((b,c)=>b+getShare(rl,c),0),0);
   const norm = rowLabels.map(rl => { const t = cats.reduce((b,c)=>b+getShare(rl,c),0); return t>0?t:1; });
   // 图例：先估算宽度，超出则换行
@@ -474,7 +491,7 @@ function attachTip(svg, W, H){
 /* ---- 3.2 大屏化率（大盘＝三条竖线） ---- */
 (function(){
   const rows = B8.map(b => ({b, v:[sz.big75[b], sz.big85[b], sz.big98[b]]})).sort((a,b)=>b.v[0]-a.v[0]);
-  const W = 940, lw = 104, R = 24, T = 74, rh = 42, H = T + rows.length*rh + 26;
+  const W = CW, lw = 112, R = 12, T = 74, rh = 42, H = T + rows.length*rh + 26;
   const svg = setup("figBig", W, H);
   const span = W - lw - R, xmax = 70;
   const X = v => lw + Math.min(v, xmax)/xmax*span;
@@ -497,7 +514,7 @@ function attachTip(svg, W, H){
     const y = T + i*rh;
     txt(svg, r.b, lw-10, y+20, {"font-size":13, "font-weight":700, "text-anchor":"end", fill:C[r.b]});
     r.v.forEach((v, j) => {
-      const yy = y + j*11, w = Math.max((v/xmax)*span, 1.5);
+      const yy = y + j*11, w = Math.max((v*100/xmax)*span, 1.5);
       const rect = el("rect", {x:lw, y:yy, width:w, height:9.5, rx:2, fill:C[r.b], opacity:[.95,.7,.45][j]}, svg);
       txt(svg, fmtP(v), lw+w+5, yy+8, {"font-size":10, fill:"#37474f"});
       rect.setAttribute("data-tip", `${r.b} · ${mkNames[j]} 渗透率 ${fmtP(v)}｜大盘 ${fmtP(mk[j])}（${v-mk[j]>=0?"+":""}${((v-mk[j])*100).toFixed(1)}pp）`);
@@ -510,14 +527,14 @@ function attachTip(svg, W, H){
 /* ---- 3.3 关键尺寸均价溢价（小多图 2×3，统一宽度，避免拥挤） ---- */
 (function(){
   const sizes = tier.tiers;                    // [55,65,75,85,98]
-  const W = 940, pw = 454, pgap = 32, ph = 224, cols = 2;
+  const W = CW, L = 112, pw = 582, pgap = 32, ph = 224, cols = 2;
   const rowsN = Math.ceil(sizes.length/cols), H = rowsN*ph + (rowsN-1)*16;
   const svg = setup("figPrem", W, H);
-  const dom = 50, half = 124;                  // ±50% 溢价
+  const dom = 50, half = 180;                  // ±50% 溢价
   sizes.forEach((s, si) => {
-    const px = (si%cols)*(pw+pgap), py = Math.floor(si/cols)*(ph+16);
+    const px = L + (si%cols)*(pw+pgap), py = Math.floor(si/cols)*(ph+16);
     const m = tier.mkt[String(s)], mp = m[1]/m[0];
-    const zero = px + 196;
+    const zero = px + 240;
     el("rect",{x:px,y:py,width:pw,height:ph,rx:6,fill:"#fbfcfd",stroke:"#e4e7eb"},svg);
     txt(svg, (s>=98?"98+（含100吋）":s+" 吋"), px+12, py+20, {"font-size":13,"font-weight":700,fill:"#1f2328"});
     txt(svg, "市场均价 "+fmt0(mp)+" 元", px+pw-116, py+20, {"font-size":10.5, fill:"#78909c","text-anchor":"end"});
@@ -559,18 +576,18 @@ function attachTip(svg, W, H){
 (function(){
   const belts = ["2000-2999","3000-4999","5000-6999","10000-12999"];
   const names = {"2000-2999":"2000-2999 走量带","3000-4999":"3000-4999 主升带","5000-6999":"5000-6999 高端攻坚带","10000-12999":"10000-12999 旗舰带"};
-  const W = 940, pw = 454, pgap = 32, ph = 232, cols = 2;
+  const W = CW, L = 112, pw = 582, pgap = 32, ph = 232, cols = 2;
   const H = 2*ph + 16;
   const svg = setup("figBattle", W, H);
   belts.forEach((belt, bi) => {
-    const px = (bi%cols)*(pw+pgap), py = Math.floor(bi/cols)*(ph+16);
+    const px = L + (bi%cols)*(pw+pgap), py = Math.floor(bi/cols)*(ph+16);
     const rows = B8.map(b => ({b, v:bc[belt+"|"+b] ? bc[belt+"|"+b].vol : 0})).filter(r=>r.v>0).sort((a,b)=>b.v-a.v);
     const mv = Math.max(...rows.map(r=>r.v)), tot = rows.reduce((a,r)=>a+r.v,0);
     el("rect",{x:px,y:py,width:pw,height:ph,rx:6,fill:"#fbfcfd",stroke:"#e4e7eb"},svg);
     txt(svg, names[belt], px+12, py+20, {"font-size":13, "font-weight":700, fill:"#1f2328"});
     txt(svg, "带内合计 "+fmt0(Math.round(tot/1e4))+" 万台", px+pw-10, py+20, {"font-size":10.5, fill:"#90a4ae", "text-anchor":"end"});
     rows.forEach((r, i) => {
-      const y = py+34+i*23, bw = Math.max(r.v/mv*236, 2);
+      const y = py+34+i*23, bw = Math.max(r.v/mv*(pw-190), 2);
       txt(svg, r.b, px+52, y+11, {"font-size":11.5, "font-weight":700, fill:C[r.b], "text-anchor":"end"});
       const rect = el("rect", {x:px+60, y:y+1.5, width:bw, height:13, rx:2, fill:C[r.b], opacity:.85}, svg);
       txt(svg, (r.v/tot*100).toFixed(1)+"%", px+64+bw, y+12, {"font-size":10.5, "font-weight":700, fill:"#37474f"});
@@ -602,9 +619,9 @@ function attachTip(svg, W, H){
 /* ---- 5.2 Mini渗透/分区/刷新（55吋及以上） ---- */
 (function(){
   const rows = B8.map(b => ({b, m:s55[b].mini_pen, p:s55[b].part_avg, r:s55[b].refresh_avg})).sort((a,b)=>b.m-a.m);
-  const W = 940, lw = 100, T = 42, rh = 38, H = T + rows.length*rh + 14;
+  const W = CW, lw = 112, T = 42, rh = 38, H = T + rows.length*rh + 14;
   const svg = setup("figMini", W, H);
-  const c1 = 106, c2 = 386, c3 = 666, bw = 150;
+  const c1 = 112, c2 = 520, c3 = 928, bw = 330;
   [["Mini 类渗透率", c1], ["平均分区数（有值型号加权）", c2], ["平均刷新率（Hz）", c3]].forEach(t =>
     txt(svg, t[0], t[1], 20, {"font-size":12, "font-weight":700, fill:"#1f2328"}));
   txt(svg, "口径：55 吋及以上，销量加权", c3, 34, {"font-size":10, fill:"#90a4ae"});
@@ -697,9 +714,9 @@ function attachTip(svg, W, H){
 /* ---- 7 渠道 ---- */
 (function(){
   const rows = B8.map(b => ({b, pe:ch.b_etype_share[b]["专业电商"], pl:ch.b_etype_share[b]["平台电商"]})).sort((a,b)=>b.pe-a.pe);
-  const W = 940, lw = 110, rh = 42, H = rows.length*rh + 58;
+  const W = CW, lw = 112, rh = 42, H = rows.length*rh + 58;
   const svg = setup("figChan", W, H);
-  const bw = W - lw - 160;
+  const bw = W - lw - 12;
   rows.forEach((r, i) => {
     const y = 34 + i*rh;
     txt(svg, r.b, lw-8, y+18, {"font-size":13, "font-weight":700, "text-anchor":"end", fill:C[r.b]});
