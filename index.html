@@ -115,7 +115,7 @@ footer{color:var(--sub);font-size:12px;text-align:center;padding:10px 0 30px;}
 <div class="meta">
 <span>口径：<b>26W01-W44 年累计</b></span>
 <span>市场总盘：<b>9,285,367 台 / 325.8亿</span>
-<span>更新时间：<b>2026-11-04 13:48</b></span>
+<span>更新时间：<b>2026-11-04 13:49</b></span>
 </div>
 </header>
 
@@ -241,7 +241,7 @@ footer{color:var(--sub);font-size:12px;text-align:center;padding:10px 0 30px;}
 <h2><span class="no">07</span>渠道倾向：专业电商 vs 平台电商</h2>
 <div class="sub" style="margin:-4px 0 8px"><b>口径</b>：专业电商＝京东 + 苏宁易购；平台电商＝天猫 + 淘宝（AVC 源表「电商类型」仅这两类，无拼多多/抖音等口径）。</div>
 <div class="figscroll"><svg id="figChan"></svg></div>
-<div class="sub" style="margin:18px 0 6px"><b>分尺寸段渠道结构</b>：每格为一个尺寸段内 8 品牌的<b>平台电商占比</b>，虚线为该尺寸段全市场水平；品牌顺序与图 1.1 一致，便于跨尺寸段对照。</div>
+<div class="sub" style="margin:18px 0 6px"><b>分尺寸段渠道结构</b>：每格为一个尺寸段内 8 品牌的<b>平台电商占比</b>，<b>深色虚线</b>为该尺寸段全市场水平、<b>浅灰实线</b>为 50% 基准线（条形越过该线即代表该品牌过半销量走平台电商）；品牌顺序与图 1.1 一致，便于跨尺寸段对照。</div>
 <div class="figscroll"><svg id="figChanSz"></svg></div>
 
 <div class="insight"><h4>解读</h4>
@@ -793,9 +793,12 @@ function attachTip(svg, W, H){
       el("rect", {x:ox+barX, y:y+2, width:Math.max(1, p*barW), height:11, rx:2, fill:C[b], opacity:.85}, svg);
       txt(svg, Math.round(p*100)+"%", ox+valX, y+11, {"font-size":10.5, "fill":"#4b5563", "text-anchor":"end"});
     });
+    // 50% 基准线（浅灰实线）：用于一眼判断"是否过半销量走平台电商"
+    const hx = ox+barX+barW*0.5;
+    el("line", {x1:hx, y1:oy+34, x2:hx, y2:oy+176, stroke:"#c2ccd8", "stroke-width":1.2}, svg);
     const mx = ox+barX+mp*barW;
     el("line", {x1:mx, y1:oy+38, x2:mx, y2:oy+40+B8l.length*17-4, stroke:"#1f2937", "stroke-width":1.2, "stroke-dasharray":"4 3", opacity:.8}, svg);
-    txt(svg, "市场 "+Math.round(mp*100)+"%", ox+labX, oy+PH-16, {"font-size":10.5, "fill":"#6b7280"});
+    txt(svg, "市场 "+Math.round(mp*100)+"%（深色虚线） · 50%（浅灰实线）", ox+labX, oy+PH-14, {"font-size":10.5, "fill":"#6b7280"});
   });
 })();
 
