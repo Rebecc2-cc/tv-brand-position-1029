@@ -117,7 +117,7 @@ footer{color:var(--sub);font-size:12px;text-align:center;padding:10px 0 30px;}
 <div class="meta">
 <span>口径：<b>26W01-W47 年累计</b></span>
 <span>市场总盘：<b>10,092,219 台 / 355.7亿</span>
-<span>更新时间：<b>2026-11-26 14:47</b></span>
+<span>更新时间：<b>2026-11-26 14:50</b></span>
 </div>
 </header>
 
@@ -554,6 +554,11 @@ function attachTip(svg, W, H){
   panels.push({name:"市场", col:"#64748b",
     sh:shareOf(sz.mkt_sz || {}), sa:shareOf(sz.mkt_sz_amt || {})});
 
+  // 主品牌居第一行，子品牌居第二行，上下同列即同一集团
+  const _by = {}; panels.forEach(p => _by[p.name] = p);
+  const ROWS = [["海信","TCL","创维","小米","市场"].map(n => _by[n]),
+                ["Vidda","雷鸟","酷开","红米"].map(n => _by[n])];
+
   const xL = 112, xR = 1308, PITCH = (xR-xL)/5;
   const BANDH = 31, LBLH = 46, ROWGAP = 26, TOP = 38;
   const PANEL_H = NB*BANDH + LBLH;
@@ -568,7 +573,7 @@ function attachTip(svg, W, H){
   txt(svg, "右半 ＝ 销额结构（虚线）", xL+193, 17.5, {"font-size":11, fill:"#3d4752", "font-weight":600});
   txt(svg, "宽度 ＝ 该尺寸段占自身销量 / 销额的比重，全部品牌共用同一刻度（最宽 60%）", xL+400, 17.5, {"font-size":10.5, fill:"#98a2ae"});
 
-  [panels.slice(0,4), panels.slice(4)].forEach((row, r) => {
+  ROWS.forEach((row, r) => {
     const yTop = TOP + r*(PANEL_H + ROWGAP);
     const yBase = yTop + NB*BANDH;
     for(let i=0;i<=NB;i++){
@@ -621,7 +626,7 @@ function attachTip(svg, W, H){
     });
   });
 
-  const nx = xL + 4*PITCH + 16, ny = TOP + 30;
+  const nx = xL + 4*PITCH + 16, ny = TOP + PANEL_H + ROWGAP + 30;
   txt(svg, "怎么读这张图", nx, ny, {"font-size":11.5, "font-weight":700, fill:"#3d4752"});
   [["左半＝销量，右半＝销额", "#6b7280"],
    ["纵向＝下 ≤50 吋 → 上 98 吋+", "#6b7280"],
@@ -811,6 +816,11 @@ function attachTip(svg, W, H){
   const panels = B8.map(b => ({name:b, col:C[b], sh:dist(b, volSrc), sa:dist(b, amtSrc)}));
   panels.push({name:"8品牌", col:"#64748b", sh:agg(volSrc), sa:agg(amtSrc)});
 
+  // 主品牌居第一行，子品牌居第二行，上下同列即同一集团
+  const _by = {}; panels.forEach(p => _by[p.name] = p);
+  const ROWS = [["海信","TCL","创维","小米","8品牌"].map(n => _by[n]),
+                ["Vidda","雷鸟","酷开","红米"].map(n => _by[n])];
+
   const xL = 112, xR = 1308, PITCH = (xR-xL)/5;
   const BANDH = 20, LBLH = 46, ROWGAP = 26, TOP = 38;
   const PANEL_H = NB*BANDH + LBLH;
@@ -824,7 +834,7 @@ function attachTip(svg, W, H){
   txt(svg, "右半 ＝ 销额结构（虚线）", xL+193, 17.5, {"font-size":11, fill:"#3d4752", "font-weight":600});
   txt(svg, "宽度 ＝ 该价格带占自身销量 / 销额的比重，全部品牌共用同一刻度（最宽 50%）", xL+400, 17.5, {"font-size":10.5, fill:"#98a2ae"});
 
-  [panels.slice(0,4), panels.slice(4)].forEach((row, r) => {
+  ROWS.forEach((row, r) => {
     const yTop = TOP + r*(PANEL_H + ROWGAP);
     const yBase = yTop + NB*BANDH;
     for(let i=0;i<=NB;i++){
@@ -873,7 +883,7 @@ function attachTip(svg, W, H){
     });
   });
 
-  const nx = xL + 4*PITCH + 16, ny = TOP + 30;
+  const nx = xL + 4*PITCH + 16, ny = TOP + PANEL_H + ROWGAP + 30;
   txt(svg, "怎么读这张图", nx, ny, {"font-size":11.5, "font-weight":700, fill:"#3d4752"});
   [["左半＝销量，右半＝销额", "#6b7280"],
    ["纵向＝下 <1000 元 → 上 20000+ 元", "#6b7280"],
