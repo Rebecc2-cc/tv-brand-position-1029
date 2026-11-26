@@ -117,7 +117,7 @@ footer{color:var(--sub);font-size:12px;text-align:center;padding:10px 0 30px;}
 <div class="meta">
 <span>口径：<b>26W01-W47 年累计</b></span>
 <span>市场总盘：<b>10,092,219 台 / 355.7亿</span>
-<span>更新时间：<b>2026-11-26 14:46</b></span>
+<span>更新时间：<b>2026-11-26 14:47</b></span>
 </div>
 </header>
 
@@ -1086,7 +1086,7 @@ function attachTip(svg, W, H){
 (function(){
   const tiers = ch.size_order, B8l = B8;
   // 3 列均分内容区 0~1308（与图 7.1 右缘同一条线）：3*PW + 2*GAP = 1308
-  const GAP = 12, PW = (1308 - GAP*2)/3, PH = 192, COLS = 3;
+  const GAP = 12, PW = (1308 - GAP*2)/3, PH = 210, COLS = 3;
   const R = Math.ceil(tiers.length/COLS);
   const W = CW, H = R*PH + (R-1)*GAP;
   const svg = setup("figChanSz", W, H);
@@ -1109,7 +1109,8 @@ function attachTip(svg, W, H){
     el("line", {x1:hx, y1:oy+34, x2:hx, y2:oy+176, stroke:"#c2ccd8", "stroke-width":1.2}, svg);
     const mx = ox+barX+mp*barW;
     el("line", {x1:mx, y1:oy+38, x2:mx, y2:oy+40+B8l.length*17-4, stroke:"#1f2937", "stroke-width":1.2, "stroke-dasharray":"4 3", opacity:.8}, svg);
-    txt(svg, "市场 "+Math.round(mp*100)+"%（深色虚线） · 50%（浅灰实线）", ox+labX, oy+PH-14, {"font-size":10.5, "fill":"#6b7280"});
+    el("line", {x1:ox+labX, y1:oy+182, x2:ox+PW-12, y2:oy+182, stroke:"#eef2f6"}, svg);
+    txt(svg, "市场 "+Math.round(mp*100)+"%（深色虚线） · 50%（浅灰实线）", ox+labX, oy+PH-12, {"font-size":10.5, "fill":"#6b7280"});
   });
 })();
 
