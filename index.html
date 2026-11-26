@@ -117,7 +117,7 @@ footer{color:var(--sub);font-size:12px;text-align:center;padding:10px 0 30px;}
 <div class="meta">
 <span>口径：<b>26W01-W47 年累计</b></span>
 <span>市场总盘：<b>10,092,219 台 / 355.7亿</span>
-<span>更新时间：<b>2026-11-26 11:48</b></span>
+<span>更新时间：<b>2026-11-26 14:37</b></span>
 </div>
 </header>
 
@@ -167,6 +167,9 @@ footer{color:var(--sub);font-size:12px;text-align:center;padding:10px 0 30px;}
 <div class="figscroll"><svg id="figBig"></svg></div>
 <h3>3.3 关键尺寸均价 vs 市场（55 / 65 / 75 / 85 / 98+ 吋，溢价率）</h3>
 <div class="figscroll"><svg id="figPrem"></svg></div>
+<h3>3.4 尺寸段内的品牌构成（100% 堆叠：上=销量 / 下=销额）</h3>
+<div class="figscroll"><svg id="figSeg"></svg></div>
+<div class="sub" style="margin-top:8px">口径：每段按 <b>8 品牌合计</b> 归一（不含其他品牌），与正文「98 吋 8 品牌合计 15.0 万台」一致；每段上条为销量构成、下条为销额构成，条右为段内 8 品牌合计规模。</div>
 
 <div class="insight"><h4>解读</h4>
 <ul>
@@ -701,6 +704,92 @@ function attachTip(svg, W, H){
     });
   });
   attachTip(svg, W, H);
+})();
+
+/* ---- 3.4 尺寸段内的品牌构成（100% 堆叠） ---- */
+(function(){
+  const BANDS = [["≤50吋", s=>s<=50], ["55-60吋", s=>s>=51&&s<=60], ["65吋", s=>s>=61&&s<=69],
+                 ["75吋", s=>s>=70&&s<=79], ["85-90吋", s=>s>=85&&s<=90], ["98吋+", s=>s>=91]];
+  const SUB = [["98吋", s=>s===98], ["100吋", s=>s===100], ["110吋+", s=>s>=110]];
+
+  function bandRow(fn){
+    const bv = {}, ba = {};
+    for(const k in sz.b_sz){
+      const p = k.split("|");
+      if(!fn(+p[1])) continue;
+      bv[p[0]] = (bv[p[0]]||0) + sz.b_sz[k];
+    }
+    const amtSrc = sz.b_sz_amt || {};
+    for(const k in amtSrc){
+      const p = k.split("|");
+      if(!fn(+p[1])) continue;
+      ba[p[0]] = (ba[p[0]]||0) + amtSrc[k];
+    }
+    let vt = 0, at = 0;
+    B8.forEach(b => { vt += bv[b]||0; at += ba[b]||0; });
+    return {bv, ba, vt, at};
+  }
+
+  const xL = 112, xR = 1308;
+  const labX = 172, tagX = 178, barX = 196, barEnd = 1146, barW = barEnd - barX, totX = 1156;
+  const BH = 15, BG = 3, ROW2 = 12;
+
+  const mainRows = BANDS.map(b => ({lab:b[0], r:bandRow(b[1])}));
+  const subRows  = SUB.map(b => ({lab:b[0], r:bandRow(b[1])}));
+
+  const LEG = 34;                                   // 顶部图例
+  const Hmain = mainRows.length * (BH*2+BG+ROW2);
+  const HsubTitle = 26;
+  const Hsub = subRows.length * (BH*2+BG+ROW2);
+  const H = LEG + Hmain + HsubTitle + Hsub + 10;
+  const S = setup("figSeg", CW, H);
+
+  // 图例
+  let lx = xL;
+  B8.forEach(b => {
+    el("rect", {x:lx, y:12, width:10, height:10, rx:2, fill:C[b]}, S);
+    txt(S, b, lx+14, 21, {"font-size":10.5, fill:"#4b5563"});
+    lx += 16 + b.length*11 + 12;
+  });
+  txt(S, "每段按 8 品牌合计归一，不含其他品牌", lx+6, 21, {"font-size":10, fill:"#a8b2bd"});
+
+  function bar(y, d, tot, tag){
+    txt(S, tag, tagX, y+11.5, {"font-size":9.5, fill:"#a8b2bd"});
+    let x = barX;
+    B8.forEach(b => {
+      const v = d[b] || 0;
+      if(v <= 0) return;
+      const w = v / tot * barW;
+      el("rect", {x:x, y:y, width:Math.max(0.6, w), height:BH, fill:C[b]}, S);
+      if(w >= 32)
+        txt(S, Math.round(v/tot*100)+"%", x+w/2, y+11, {"font-size":9.5, fill:"#fff",
+            "text-anchor":"middle", "font-weight":600});
+      const hit = el("rect", {x:x, y:y, width:Math.max(0.6,w), height:BH, fill:"#fff", "fill-opacity":0}, S);
+      hit.setAttribute("data-tip", b + " · " + tag + " · " + Math.round(v/tot*1000)/10 + "%（" +
+        (tag === "量" ? (v/1e4).toFixed(2)+" 万台" : (v/1e8).toFixed(2)+" 亿元") + "）");
+      x += w;
+    });
+  }
+
+  function rowBlock(y, lab, r){
+    txt(S, lab, labX, y+BH+4, {"font-size":11.5, "font-weight":700, "fill":"#3d4752", "text-anchor":"end"});
+    bar(y, r.bv, r.vt, "量");
+    bar(y+BH+BG, r.ba, r.at, "额");
+    const fv = r.vt >= 1e4 ? (r.vt/1e4).toFixed(1)+"万台" : Math.round(r.vt)+"台";
+    txt(S, fv, totX, y+BH-2, {"font-size":9.5, fill:"#98a2ae"});
+    txt(S, (r.at/1e8).toFixed(1)+"亿元", totX, y+BH*2+BG-2, {"font-size":9.5, fill:"#98a2ae"});
+  }
+
+  let y = LEG;
+  mainRows.forEach(o => { rowBlock(y, o.lab, o.r); y += BH*2+BG+ROW2; });
+
+  y += 6;
+  el("line", {x1:xL, y1:y, x2:xR, y2:y, stroke:"#eef2f6"}, S);
+  txt(S, "98 吋+ 档内部：98 吋 / 100 吋 / 110 吋+", xL, y+17, {"font-size":11, "font-weight":700, fill:"#3d4752"});
+  y += HsubTitle;
+  subRows.forEach(o => { rowBlock(y, o.lab, o.r); y += BH*2+BG+ROW2; });
+
+  attachTip(S, CW, H);
 })();
 
 /* ---- 4.1 价格带结构 ---- */
